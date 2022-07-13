@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  keycloak:
+    image: moeabdol/keycloak
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    depends_on:
+      - postgres
+    ports:
+      - 8443:8443
+
+  postgres:
+    image: postgres:14.4-bullseye
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=test_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer:4.8.1-standalone
+    depends_on:
+      - postgres
+    volumes:
+      - ./adminer.css:/var/www/html/adminer.css
+    ports:
+      - 8080:8080
+
+volumes:
+  postgres_data:
+    driver: local
